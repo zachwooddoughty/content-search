@@ -8,27 +8,27 @@ import praw
 def build_list():
     r = praw.Reddit(user_agent="mermoosescraper")
     subs = [
-#         'insightfulquestions',
-#         'changemymind',
-#         'freethought',
-#         'askscience',
-#         'askphilosophy',
-#         'existentialism',
-#         'philosophyofscience',
-#         'humanism',
-#         'askanthropology',
-#         'asksocialscience',
-#         'cogsci',
-#         'neuropsychology',
-#         'feminism',
+         'insightfulquestions',
+         'changemymind',
+         'freethought',
+         'askscience',
+         'askphilosophy',
+         'existentialism',
+         'philosophyofscience',
+         'humanism',
+         'askanthropology',
+         'asksocialscience',
+         'cogsci',
+         'neuropsychology',
+         'feminism',
          'politicaldiscussion',
-#         'moderatepolitics',
-#         'literature',
-#         'askhistorians',
-#         'foodforthought',
-#         'truereddit',
-#         'depthhub',
-#         'worldnews',
+         'moderatepolitics',
+         'literature',
+         'askhistorians',
+         'foodforthought',
+         'truereddit',
+         'depthhub',
+         'worldnews',
     ]
 
     posts = {}
@@ -39,7 +39,7 @@ def build_list():
     for sub in subs:
         try:
             list_of_posts = []
-            for thing in r.search('', subreddit=sub, limit=10):
+            for thing in r.search('', subreddit=sub, sort='hot', limit=1):
                 list_of_posts.append(thing)
             print 'Looking through %d posts from r/%s' % (len(list_of_posts), sub)
             for thing in list_of_posts:
@@ -70,7 +70,7 @@ def build_list():
         pickle_list.append(post_tuple)
 
     print 'commencing pickle'
-    with open('redditcomments.txt', 'wb') as outfile:
+    with open('unviewed.txt', 'wb') as outfile:
         cPickle.dump(pickle_list, outfile)
 
 
@@ -80,9 +80,9 @@ def output(s, outfile):
 
 
 def view_list():
-    with open('redditcomments.txt', 'rb') as infile:
+    with open('unviewed.txt', 'rb') as infile:
         pickle_list = cPickle.load(infile)
-    with open('viewedcomments.txt', 'a') as outfile:
+    with open('viewed.txt', 'a') as outfile:
         for index in range(len(pickle_list)):
             post_tuple = pickle_list[index]
             output('url: '+ str(post_tuple[0][0]), outfile)
@@ -98,7 +98,7 @@ def view_list():
                 break
 
     pickle_list = pickle_list[index + 1:]
-    with open('redditcomments.txt', 'wb') as outfile:
+    with open('unviewed.txt', 'wb') as outfile:
         cPickle.dump(pickle_list, outfile)
 
 
