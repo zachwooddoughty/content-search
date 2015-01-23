@@ -74,21 +74,32 @@ def build_list():
         cPickle.dump(pickle_list, outfile)
 
 
+def output(s, outfile):
+    print s
+    outfile.write(s + '\n')
+
+
 def view_list():
     with open('redditcomments.txt', 'rb') as infile:
         pickle_list = cPickle.load(infile)
-    for post_tuple in pickle_list:
-        print 'url:', post_tuple[0][0]
-        print 'title:', post_tuple[0][1]
-        for comment in post_tuple[1]:
-            print comment
-            print '----'*20
-            if raw_input('another comment?' )[:1].lower() == 'n':
+    with open('viewedcomments.txt', 'a') as outfile:
+        for index in range(len(pickle_list)):
+            post_tuple = pickle_list[index]
+            output('url: '+ str(post_tuple[0][0]), outfile)
+            output('title:' + str(post_tuple[0][1]), outfile)
+            for comment in post_tuple[1]:
+                output(comment, outfile)
+                output('----'*20, outfile)
+                if raw_input('another comment?' )[:1].lower() == 'n':
+                    break
+            output('===='*20, outfile)
+            output('===='*20, outfile)
+            if raw_input('another post?' )[:1].lower() == 'n':
                 break
-        print '===='*20
-        print '===='*20
-        if raw_input('another post?' )[:1].lower() == 'n':
-            break
+
+    pickle_list = pickle_list[index + 1:]
+    with open('redditcomments.txt', 'wb') as outfile:
+        cPickle.dump(pickle_list, outfile)
 
 
 def main():
